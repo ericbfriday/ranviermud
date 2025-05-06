@@ -1,5 +1,5 @@
 
-const sprintf = require('sprintf-js').sprintf;
+import { sprintf } from 'sprintf-js';
 import LevelUtil from '../bundle-example-lib/lib/LevelUtil';
 import { Broadcast as B, Config, Logger } from '@friday/ranvier';
 

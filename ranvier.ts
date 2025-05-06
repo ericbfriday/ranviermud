@@ -2,6 +2,7 @@
 import process, { type config } from 'node:process';
 
 import fs from 'node:fs';
+import path, { normalize } from 'node:path';
 import * as Ranvier from '@friday/ranvier';
 import { Command } from 'commander';
 
@@ -24,12 +25,12 @@ const Config = Ranvier.Config;
 
 const require = createRequire(import.meta.url);
 
-const __filename = new URL('', import.meta.url).pathname;
+const __filename = path.normalize(new URL('', import.meta.url).pathname);
 // Will contain trailing slash
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = path.normalize(new URL('.', import.meta.url).pathname);
 
 // Wrapper for ranvier.json
-Ranvier.Data.setDataPath(__dirname + '/data/');
+Ranvier.Data.setDataPath(path.join(__dirname + '/data/'));
 if (fs.existsSync('./ranvier.config.ts')) {
     try {
         const { default: configObj } = await import('./ranvier.config.ts');
@@ -166,14 +167,13 @@ async function init(restartServer?: boolean) {
     // setup entity loaders
     staticGameState.DataSourceRegistry.load(
         require,
-        __dirname,
+        normalize(__dirname).slice(1),
         Config.get('dataSources'),
     );
     staticGameState.EntityLoaderRegistry.load(
         staticGameState.DataSourceRegistry,
         Config.get('entityLoaders'),
     );
-    staticGameState;
     staticGameState.AccountManager.setLoader(
         staticGameState.EntityLoaderRegistry.get('accounts' as const),
     );
@@ -183,8 +183,8 @@ async function init(restartServer?: boolean) {
 
     // Setup bundlemanager
     const BundleManager = new Ranvier.BundleManager(
-        __dirname + '/bundles/',
-        GameState,
+        path.join(__dirname + 'bundles/'),
+        staticGameState as unknown as IGameState, // GameState,
     );
 
     await BundleManager.loadBundles();

@@ -1,5 +1,5 @@
 
-export default [
+const attributes = [
     {
         name: 'mana',
         base: 100,
@@ -12,3 +12,5 @@ export default [
     },
     { name: 'favor', base: 10 },
 ];
+
+export default attributes;

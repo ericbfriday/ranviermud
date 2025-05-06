@@ -1,5 +1,5 @@
 
-const sprintf = require('sprintf-js').sprintf;
+import { sprintf } from 'sprintf-js';
 import { Broadcast } from '@friday/ranvier';
 
 /**

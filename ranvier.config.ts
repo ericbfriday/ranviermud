@@ -22,54 +22,54 @@ type ConfigKeys =
     | 'maxIdleTime';
 
 const entityLoadersConfig = {
-    "accounts": {
-        "source": "JsonDirectory",
-        "config": {
-            "path": "data/account"
-        }
+    'accounts': {
+        'source': 'JsonDirectory',
+        'config': {
+            'path': 'data/account',
+        },
     },
-    "players": {
-        "source": "JsonDirectory",
-        "config": {
-            "path": "data/player"
-        }
+    'players': {
+        'source': 'JsonDirectory',
+        'config': {
+            'path': 'data/player',
+        },
     },
-    "areas": {
-        "source": "YamlArea",
-        "config": {
-            "path": "bundles/[BUNDLE]/areas"
-        }
+    'areas': {
+        'source': 'YamlArea',
+        'config': {
+            'path': 'bundles/[BUNDLE]/areas',
+        },
     },
-    "npcs": {
-        "source": "Yaml",
-        "config": {
-            "path": "bundles/[BUNDLE]/areas/[AREA]/npcs.yml"
-        }
+    'npcs': {
+        'source': 'Yaml',
+        'config': {
+            'path': 'bundles/[BUNDLE]/areas/[AREA]/npcs.yml',
+        },
     },
-    "items": {
-        "source": "Yaml",
-        "config": {
-            "path": "bundles/[BUNDLE]/areas/[AREA]/items.yml"
-        }
+    'items': {
+        'source': 'Yaml',
+        'config': {
+            'path': 'bundles/[BUNDLE]/areas/[AREA]/items.yml',
+        },
     },
-    "rooms": {
-        "source": "Yaml",
-        "config": {
-            "path": "bundles/[BUNDLE]/areas/[AREA]/rooms.yml"
-        }
+    'rooms': {
+        'source': 'Yaml',
+        'config': {
+            'path': 'bundles/[BUNDLE]/areas/[AREA]/rooms.yml',
+        },
     },
-    "quests": {
-        "source": "Yaml",
-        "config": {
-            "path": "bundles/[BUNDLE]/areas/[AREA]/quests.yml"
-        }
+    'quests': {
+        'source': 'Yaml',
+        'config': {
+            'path': 'bundles/[BUNDLE]/areas/[AREA]/quests.yml',
+        },
     },
-    "help": {
-        "source": "YamlDirectory",
-        "config": {
-            "path": "bundles/[BUNDLE]/help"
-        }
-    }
+    'help': {
+        'source': 'YamlDirectory',
+        'config': {
+            'path': 'bundles/[BUNDLE]/help',
+        },
+    },
 };
 
 const dataSourcesConfig = {

@@ -1,5 +1,5 @@
 
-const sprintf = require('sprintf-js').sprintf;
+import { sprintf } from 'sprintf-js';
 import { Broadcast as B } from '@friday/ranvier';
 import Combat from '../../bundle-example-combat/lib/Combat';
 

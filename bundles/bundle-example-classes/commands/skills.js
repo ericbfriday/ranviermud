@@ -1,5 +1,4 @@
-
-const sprintf = require('sprintf-js').sprintf;
+import { sprintf } from 'sprintf-js';
 import { Broadcast as B, Logger } from '@friday/ranvier';
 
 export default {
