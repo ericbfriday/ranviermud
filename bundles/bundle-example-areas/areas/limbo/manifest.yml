@@ -1,4 +1,4 @@
-title: "Limbo"
+title: 'Limbo'
 behaviors:
-  progressive-respawn:
-    interval: 20
+    progressive-respawn:
+        interval: 20

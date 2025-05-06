@@ -20,7 +20,7 @@ resolve your issue right then and there!
 
 If you are new to the open source world or even a veteran who just wants an easy introduction to the Ranvier codebase
 check the issue list for issues with the [help wanted](https://github.com/shawncplus/ranviermud/labels/help%20wanted) label.
- _help wanted_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
+_help wanted_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
 a certain Ranvier subsystem.
 
 ## Documentation
@@ -40,11 +40,11 @@ from the root of the repo.
 
 An example of something that _would_ be desired for a code contribution:
 
-* Yes: A bugfix for code in `src/`.
-* Yes: A bugfix or feature for code in one of the bundles prefixed with `ranvier-`.
-* Maybe: A feature for code in `src/`. This might have some discussion around it depending if it changes any of the data
+- Yes: A bugfix for code in `src/`.
+- Yes: A bugfix or feature for code in one of the bundles prefixed with `ranvier-`.
+- Maybe: A feature for code in `src/`. This might have some discussion around it depending if it changes any of the data
   models or impacts existing bundles.
-* No: Your bundles. The end goal will be to have a place, like npm, where you can register your bundles for other
+- No: Your bundles. The end goal will be to have a place, like npm, where you can register your bundles for other
   Ranvier users to download. For now as long as your bundle is on github you can submit an issue for us to link to your
   bundle from our documentation.
 

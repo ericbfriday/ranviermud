@@ -3,8 +3,8 @@
   keywords: ['squirrel']
   name: A Squirrel
   level: 2
-  description: "A furry little squirrel"
+  description: 'A furry little squirrel'
   behaviors:
-    ranvier-wander:
-      interval: 30
-      areaRestricted: true
+      ranvier-wander:
+          interval: 30
+          areaRestricted: true

@@ -1,96 +1,95 @@
-'use strict';
 
-const { QuestGoal } = require('ranvier');
+import { QuestGoal } from '@friday/ranvier';
 
 /**
  * A quest goal requiring the player picks up a certain number of a particular item
  */
-module.exports = class FetchGoal extends QuestGoal {
-  constructor(quest, config, player) {
-    config = Object.assign({
-      title: 'Retrieve Item',
-      removeItem: false,
-      count: 1,
-      item: null
-    }, config);
+export default class FetchGoal extends QuestGoal {
+    constructor(quest, config, player) {
+        config = Object.assign({
+            title: 'Retrieve Item',
+            removeItem: false,
+            count: 1,
+            item: null,
+        }, config);
 
-    super(quest, config, player);
+        super(quest, config, player);
 
-    this.state = {
-      count: 0
-    };
+        this.state = {
+            count: 0,
+        };
 
-    this.on('get', this._getItem);
-    this.on('drop', this._dropItem);
-    this.on('decay', this._dropItem);
-    this.on('start', this._checkInventory);
-  }
-
-  getProgress() {
-    const amount = Math.min(this.config.count, this.state.count);
-    const percent = (amount / this.config.count) * 100;
-    const display = `${this.config.title}: [${amount}/${this.config.count}]`;
-    return { percent, display };
-  }
-
-  complete() {
-    if (this.state.count < this.config.count) {
-      return;
+        this.on('get', this._getItem);
+        this.on('drop', this._dropItem);
+        this.on('decay', this._dropItem);
+        this.on('start', this._checkInventory);
     }
 
-    const player = this.quest.player;
+    getProgress() {
+        const amount = Math.min(this.config.count, this.state.count);
+        const percent = (amount / this.config.count) * 100;
+        const display = `${this.config.title}: [${amount}/${this.config.count}]`;
+        return { percent, display };
+    }
 
-    // this fetch quest by default removes all the quest items from the player inv
-    if (this.config.removeItem) {
-      for (let i = 0; i < this.config.count; i++) {
-        for (const [, item] of player.inventory) {
-          if (item.entityReference === this.config.item) {
-            this.quest.GameState.ItemManager.remove(item);
-            break;
-          }
+    complete() {
+        if (this.state.count < this.config.count) {
+            return;
         }
-      }
+
+        const player = this.quest.player;
+
+        // this fetch quest by default removes all the quest items from the player inv
+        if (this.config.removeItem) {
+            for (let i = 0; i < this.config.count; i++) {
+                for (const [, item] of player.inventory) {
+                    if (item.entityReference === this.config.item) {
+                        this.quest.GameState.ItemManager.remove(item);
+                        break;
+                    }
+                }
+            }
+        }
+
+        super.complete();
     }
 
-    super.complete();
-  }
+    _getItem(item) {
+        if (item.entityReference !== this.config.item) {
+            return;
+        }
 
-  _getItem(item) {
-    if (item.entityReference !== this.config.item) {
-      return;
+        this.state.count = (this.state.count || 0) + 1;
+
+        if (this.state.count > this.config.count) {
+            return;
+        }
+
+        this.emit('progress', this.getProgress());
     }
 
-    this.state.count = (this.state.count || 0) + 1;
+    _dropItem(item) {
+        if (!this.state.count || item.entityReference !== this.config.item) {
+            return;
+        }
 
-    if (this.state.count > this.config.count) {
-      return;
+        this.state.count--;
+
+        if (this.state.count >= this.config.count) {
+            return;
+        }
+
+        this.emit('progress', this.getProgress());
     }
 
-    this.emit('progress', this.getProgress());
-  }
+    _checkInventory() {
+        // when the quest is first started check the player's inventory for items they need
+        if (!this.player.inventory) {
+            return;
+        }
 
-  _dropItem(item) {
-    if (!this.state.count || item.entityReference !== this.config.item) {
-      return;
+        for (const [, item] of this.player.inventory) {
+            this._getItem(item);
+        }
     }
-
-    this.state.count--;
-
-    if (this.state.count >= this.config.count) {
-      return;
-    }
-
-    this.emit('progress', this.getProgress());
-  }
-
-  _checkInventory() {
-    // when the quest is first started check the player's inventory for items they need
-    if (!this.player.inventory) {
-      return;
-    }
-
-    for (const [, item] of this.player.inventory) {
-      this._getItem(item);
-    }
-  }
 };

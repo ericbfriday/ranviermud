@@ -1,26 +1,25 @@
-'use strict';
 
-const { Broadcast: B } = require('ranvier');
+import { Broadcast as B } from '@friday/ranvier';
 
-module.exports = {
-  usage: 'who',
-  command: (state) => (args, player) => {
-    B.sayAt(player, "<bold><red>                  Who's Online</bold></red>");
-    B.sayAt(player, "<bold><red>===============================================</bold></red>");
-    B.sayAt(player, '');
+export default {
+    usage: 'who',
+    command: (state) => (args, player) => {
+        B.sayAt(player, "<bold><red>                  Who's Online</bold></red>");
+        B.sayAt(player, '<bold><red>===============================================</bold></red>');
+        B.sayAt(player, '');
 
-    state.PlayerManager.players.forEach((otherPlayer) => {
-      B.sayAt(player, ` *  ${otherPlayer.name} ${getRoleString(otherPlayer.role)}`);
-    });
+        state.PlayerManager.players.forEach((otherPlayer) => {
+            B.sayAt(player, ` *  ${otherPlayer.name} ${getRoleString(otherPlayer.role)}`);
+        });
 
-    B.sayAt(player, state.PlayerManager.players.size + ' total');
+        B.sayAt(player, state.PlayerManager.players.size + ' total');
 
-    function getRoleString(role = 0) {
-      return [
-        '',
-        '<white>[Builder]</white>',
-        '<b><white>[Admin]</white></b>'
-      ][role] || '';
-    }
-  }
+        function getRoleString(role = 0) {
+            return [
+                '',
+                '<white>[Builder]</white>',
+                '<b><white>[Admin]</white></b>',
+            ][role] || '';
+        }
+    },
 };

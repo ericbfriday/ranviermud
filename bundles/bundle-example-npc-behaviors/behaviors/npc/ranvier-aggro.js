@@ -1,6 +1,5 @@
-'use strict';
 
-const { Broadcast: B, Logger } = require('ranvier');
+import { Broadcast as B, Logger } from '@friday/ranvier';
 
 /**
  * A simple behavior to make an NPC aggressive. Aggressive is defined as attacking after some delay
@@ -37,87 +36,90 @@ const { Broadcast: B, Logger } = require('ranvier');
  *            players: false
  *            npcs: ["limbo:squirrel", "limbo:rabbit"]
  */
-module.exports = {
-  listeners: {
-    updateTick: state => function (config) {
-      if (!this.room) {
-        return;
-      }
+export default {
+    listeners: {
+        updateTick: (state) =>
+            function (config) {
+                if (!this.room) {
+                    return;
+                }
 
-      if (typeof config !== 'object') {
-        config = {};
-      }
+                if (typeof config !== 'object') {
+                    config = {};
+                }
 
-      // setup default configs
-      config = Object.assign({
-        delay: 5,
-        warnMessage: '%name% growls, warning you away.',
-        attackMessage: '%name% attacks you!',
-        towards: {
-          players: true,
-          npcs: false
-        }
-      }, config);
+                // setup default configs
+                config = Object.assign({
+                    delay: 5,
+                    warnMessage: '%name% growls, warning you away.',
+                    attackMessage: '%name% attacks you!',
+                    towards: {
+                        players: true,
+                        npcs: false,
+                    },
+                }, config);
 
-      if (this.isInCombat()) {
-        return;
-      }
+                if (this.isInCombat()) {
+                    return;
+                }
 
-      if (this._aggroTarget) {
-        if (this._aggroTarget.room !== this.room) {
-          this._aggroTarget = null;
-          this._aggroWarned = false;
-          return;
-        }
+                if (this._aggroTarget) {
+                    if (this._aggroTarget.room !== this.room) {
+                        this._aggroTarget = null;
+                        this._aggroWarned = false;
+                        return;
+                    }
 
-        const sinceLastCheck = Date.now() - this._aggroTimer;
-        const delayLength = config.delay * 1000;
+                    const sinceLastCheck = Date.now() - this._aggroTimer;
+                    const delayLength = config.delay * 1000;
 
-        // attack
-        if (sinceLastCheck >= delayLength) {
-          if (!this._aggroTarget.isNpc) {
-            B.sayAt(this._aggroTarget, config.attackMessage.replace(/%name%/, this.name));
-          } else {
-            Logger.verbose(`NPC [${this.uuid}/${this.entityReference}] attacks NPC [${this._aggroTarget.uuid}/${this._aggroTarget.entityReference}] in room ${this.room.entityReference}.`);
-          }
-          this.initiateCombat(this._aggroTarget);
-          this._aggroTarget = null;
-          this._aggroWarned = false;
-          return;
-        }
+                    // attack
+                    if (sinceLastCheck >= delayLength) {
+                        if (!this._aggroTarget.isNpc) {
+                            B.sayAt(this._aggroTarget, config.attackMessage.replace(/%name%/, this.name));
+                        } else {
+                            Logger.verbose(
+                                `NPC [${this.uuid}/${this.entityReference}] attacks NPC [${this._aggroTarget.uuid}/${this._aggroTarget.entityReference}] in room ${this.room.entityReference}.`,
+                            );
+                        }
+                        this.initiateCombat(this._aggroTarget);
+                        this._aggroTarget = null;
+                        this._aggroWarned = false;
+                        return;
+                    }
 
-        // warn
-        if (sinceLastCheck >= delayLength / 2 && !this._aggroTarget.isNpc && !this._aggroWarned) {
-          B.sayAt(this._aggroTarget, config.warnMessage.replace(/%name%/, this.name));
-          this._aggroWarned = true;
-        }
+                    // warn
+                    if (sinceLastCheck >= delayLength / 2 && !this._aggroTarget.isNpc && !this._aggroWarned) {
+                        B.sayAt(this._aggroTarget, config.warnMessage.replace(/%name%/, this.name));
+                        this._aggroWarned = true;
+                    }
 
-        return;
-      }
+                    return;
+                }
 
-      // try to find a player to be aggressive towards first
-      if (config.towards.players && this.room.players.size) {
-        this._aggroTarget = [...this.room.players][0];
-        this._aggroTimer = Date.now();
-        return;
-      }
+                // try to find a player to be aggressive towards first
+                if (config.towards.players && this.room.players.size) {
+                    this._aggroTarget = [...this.room.players][0];
+                    this._aggroTimer = Date.now();
+                    return;
+                }
 
-      if (config.towards.npcs && this.room.npcs.size) {
-        for (const npc of this.room.npcs) {
-          if (npc === this) {
-            continue;
-          }
+                if (config.towards.npcs && this.room.npcs.size) {
+                    for (const npc of this.room.npcs) {
+                        if (npc === this) {
+                            continue;
+                        }
 
-          if (
-            config.towards.npcs === true ||
-            (Array.isArray(config.towards.npcs) && config.towards.npcs.includes(npc.entityReference))
-          ) {
-            this._aggroTarget = npc;
-            this._aggroTimer = Date.now();
-            return;
-          }
-        }
-      }
-    }
-  }
+                        if (
+                            config.towards.npcs === true ||
+                            (Array.isArray(config.towards.npcs) && config.towards.npcs.includes(npc.entityReference))
+                        ) {
+                            this._aggroTarget = npc;
+                            this._aggroTimer = Date.now();
+                            return;
+                        }
+                    }
+                }
+            },
+    },
 };

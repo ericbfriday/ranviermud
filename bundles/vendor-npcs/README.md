@@ -41,12 +41,12 @@ Vendors have an infinite supply, each purchased item will be generated on-demand
 Items can only be sold to a vendor if they have the `sellable` metadata
 
 ```yaml
-- id: "scraps"
-  name: "Scraps"
+- id: 'scraps'
+  name: 'Scraps'
   metadata:
-    sellable:
-      value: 5
-      currency: gold
+      sellable:
+          value: 5
+          currency: gold
 ```
 
 Sold items are removed from the game.

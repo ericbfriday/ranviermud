@@ -1,5 +1,5 @@
 ---
 title: Map Test
 info:
-  respawnInterval: 60
+    respawnInterval: 60
 instanced: player

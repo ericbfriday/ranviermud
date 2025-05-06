@@ -1,0 +1,33 @@
+{
+    "name": "ranviermudts",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/Ranvier-TS/RanvierMud-TS.git"
+    },
+    "engines": {
+        "node": ">= 18.0.0"
+    },
+    "license": "MIT",
+    "scripts": {
+        "start": "ts-node ./ranvier.ts",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "commander": "10.0.1",
+        "humanize": "0.0.9",
+        "optimist": "",
+        "rando-js": "^0.2.0",
+        "ranvier": "*",
+        "semver": "^5.6.0",
+        "sprintf-js": "^1.1.2",
+        "ts-node": "^10.9.1",
+        "winston": "^2.4.4",
+        "ws": "^3.3.3"
+    },
+    "devDependencies": {
+        "@types/node": "^20.2.1",
+        "git-url-parse": "^11.1.2",
+        "typescript": "^5.0.4"
+    }
+}

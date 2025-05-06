@@ -1,0 +1,26 @@
+{
+    "name": "@friday/ravniermudts",
+    "version": "0.0.1",
+    "exports": "./ranvier.ts",
+    "tasks": {
+        "dev": "deno run --check --watch --allow-read ranvier.ts",
+        "lint": "deno lint",
+        "fmt": "deno fmt",
+        "build": "deno compile -p 4000 --pretty-error --verbose"
+    },
+    "fmt": {
+        "include": [
+            "./*.ts",
+            "./util/*.js"
+        ]
+    },
+    "lint": {
+        "include": [
+            "./*.ts",
+            "./util/*.js"
+        ]
+    },
+    "compilerOptions": {
+        "strict": false
+    }
+}

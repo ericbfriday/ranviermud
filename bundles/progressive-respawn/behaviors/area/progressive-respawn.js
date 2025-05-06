@@ -1,7 +1,6 @@
-'use strict';
 
-const { Logger } = require('ranvier');
-const { Random } = require('rando-js');
+import { Logger } from '@friday/ranvier';
+import { randomIntegerBetween } from '@std/random';
 
 /**
  * Behavior for having a constant respawn tick happening every [interval]
@@ -12,87 +11,85 @@ const { Random } = require('rando-js');
  * config:
  *   interval: number=30
  */
-module.exports = {
-  listeners: {
-    updateTick: state => {
-      let lastRespawnTick = Date.now();
-      return function (config) {
-        // setup respawnTick to only happen every [interval] seconds
-        const respawnInterval = config.interval || 30;
-        const sinceLastTick = Date.now() - lastRespawnTick;
-        if (sinceLastTick >= respawnInterval * 1000) {
-          lastRespawnTick = Date.now();
-          for (const [id, room] of this.rooms) {
-            room.emit('respawnTick', state);
-          }
-        }
-      };
+export const listeners = {
+    updateTick: (state) => {
+        let lastRespawnTick = Date.now();
+        return function (config) {
+            // setup respawnTick to only happen every [interval] seconds
+            const respawnInterval = config.interval || 30;
+            const sinceLastTick = Date.now() - lastRespawnTick;
+            if (sinceLastTick >= respawnInterval * 1000) {
+                lastRespawnTick = Date.now();
+                for (const [id, room] of this.rooms) {
+                    room.emit('respawnTick', state);
+                }
+            }
+        };
     },
 
-    roomAdded: state => function (config, room) {
-      room.on('respawnTick', _respawnRoom.bind(room));
+    roomAdded: (state) => function (config, room) {
+        room.on('respawnTick', _respawnRoom.bind(room));
     },
-  },
 };
 
 function _respawnRoom(state) {
-  // relock/close doors
-  this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
+    // relock/close doors
+    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
 
-  this.defaultNpcs.forEach(defaultNpc => {
-    if (typeof defaultNpc === 'string') {
-      defaultNpc = { id: defaultNpc };
-    }
+    this.defaultNpcs.forEach((defaultNpc) => {
+        if (typeof defaultNpc === 'string') {
+            defaultNpc = { id: defaultNpc };
+        }
 
-    defaultNpc = Object.assign({
-      respawnChance: 100,
-      maxLoad: 1,
-      replaceOnRespawn: false
-    }, defaultNpc);
+        defaultNpc = Object.assign({
+            respawnChance: 100,
+            maxLoad: 1,
+            replaceOnRespawn: false,
+        }, defaultNpc);
 
-    const npcCount = [...this.spawnedNpcs].filter(npc => npc.entityReference === defaultNpc.id).length;
-    const needsRespawn = npcCount < defaultNpc.maxLoad;
+        const npcCount = [...this.spawnedNpcs].filter((npc) => npc.entityReference === defaultNpc.id).length;
+        const needsRespawn = npcCount < defaultNpc.maxLoad;
 
-    if (!needsRespawn) {
-      return;
-    }
+        if (!needsRespawn) {
+            return;
+        }
 
-    if (Random.probability(defaultNpc.respawnChance)) {
-      try {
-        this.spawnNpc(state, defaultNpc.id);
-      } catch (err) {
-        Logger.error(err.message);
-      }
-    }
-  });
+        if (randomIntegerBetween(0, 100) >= defaultNpc.respawnChance) {
+            try {
+                this.spawnNpc(state, defaultNpc.id);
+            } catch (err) {
+                Logger.error(err.message);
+            }
+        }
+    });
 
-  this.defaultItems.forEach(defaultItem => {
-    if (typeof defaultItem === 'string') {
-      defaultItem = { id: defaultItem };
-    }
+    this.defaultItems.forEach((defaultItem) => {
+        if (typeof defaultItem === 'string') {
+            defaultItem = { id: defaultItem };
+        }
 
-    defaultItem = Object.assign({
-      respawnChance: 100,
-      maxLoad: 1,
-      replaceOnRespawn: false
-    }, defaultItem);
+        defaultItem = Object.assign({
+            respawnChance: 100,
+            maxLoad: 1,
+            replaceOnRespawn: false,
+        }, defaultItem);
 
-    const itemCount = [...this.items].filter(item => item.entityReference === defaultItem.id).length;
-    const needsRespawn = itemCount < defaultItem.maxLoad;
+        const itemCount = [...this.items].filter((item) => item.entityReference === defaultItem.id).length;
+        const needsRespawn = itemCount < defaultItem.maxLoad;
 
-    if (!needsRespawn && !defaultItem.replaceOnRespawn) {
-      return;
-    }
+        if (!needsRespawn && !defaultItem.replaceOnRespawn) {
+            return;
+        }
 
-    if (Random.probability(defaultItem.respawnChance)) {
-      if (defaultItem.replaceOnRespawn) {
-        this.items.forEach(item => {
-          if (item.entityReference === defaultItem.id) {
-            state.ItemManager.remove(item);
-          }
-        });
-      }
-      this.spawnItem(state, defaultItem.id);
-    }
-  });
+        if (Random.probability(defaultItem.respawnChance)) {
+            if (defaultItem.replaceOnRespawn) {
+                this.items.forEach((item) => {
+                    if (item.entityReference === defaultItem.id) {
+                        state.ItemManager.remove(item);
+                    }
+                });
+            }
+            this.spawnItem(state, defaultItem.id);
+        }
+    });
 }

@@ -1,12 +1,11 @@
-'use strict';
 
-const { Broadcast } = require('ranvier');
+import { Broadcast } from '@friday/ranvier';
 
-module.exports = {
-  usage: 'save',
-  command: state => (args, player) => {
-    player.save(() => {
-      Broadcast.sayAt(player, "Saved.");
-    });
-  }
+export default {
+    usage: 'save',
+    command: (state) => (args, player) => {
+        player.save(() => {
+            Broadcast.sayAt(player, 'Saved.');
+        });
+    },
 };
